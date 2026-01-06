@@ -4,7 +4,6 @@ import { trace } from "@opentelemetry/api";
 // id -> human label mapping for the model dropdown
 const MODEL_META = {
   "meta-llama/llama-3.1-8b-instruct:free": "Llama 3.1 8B (Önerilen)",
-  "google/gemma-2-9b-it:free": "Gemma 2 9B (Kısa cevaplar)",
   "qwen/qwen-2.5-7b-instruct:free": "Qwen 2.5 7B (Analiz)",
   "microsoft/phi-3-mini-128k-instruct:free": "Phi-3 Mini (Çok hızlı)",
   "mistralai/mistral-7b-instruct:free": "Mistral 7B (Hızlı)",

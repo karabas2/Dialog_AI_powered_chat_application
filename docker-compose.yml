@@ -6,7 +6,6 @@ services:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
       - "16686:16686"  # Jaeger UI
-      - "4317:4317"    # OTLP gRPC
       - "4318:4318"    # OTLP HTTP
     restart: unless-stopped
 
@@ -17,7 +16,7 @@ services:
     container_name: dialog-backend
     environment:
       - NODE_ENV=production
-      - PORT=8080
+      - PORT=8081 #it was 8081 since before
       - CORS_ORIGIN=http://localhost:5173
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - OPENROUTER_TIMEOUT_MS=30000
@@ -25,12 +24,11 @@ services:
       # OpenTelemetry
       - OTEL_SERVICE_NAME=dialog-backend
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
-      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
       - OTEL_TRACES_EXPORTER=otlp
       - OTEL_LOGS_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - jaeger
     restart: unless-stopped
@@ -39,13 +37,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        - VITE_API_BASE_URL=http://localhost:8080
     container_name: dialog-frontend
-    environment:
-      - VITE_API_BASE_URL=http://localhost:8080
     ports:
-      - "5173:5173"
+      - "5173:80"   # host:5173 -> container:80 (nginx)
     depends_on:
       - backend
     restart: unless-stopped

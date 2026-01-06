@@ -1,4 +1,4 @@
-#Dialog AI Chat Application
+**Dialog AI Chat Application**
 
 This project is a full-stack AI-powered chat application that supports multi-session conversations, multiple LLM models, optional vision (image) input, and end-to-end observability using OpenTelemetry.
 

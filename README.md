@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Dialog AI Chat Application
 
 Dialog is a full-stack, locally runnable AI chat application. It supports multi-session conversations, multiple LLM models (via OpenRouter), optional vision (image) input, and end-to-end observability with OpenTelemetry and Jaeger.

@@ -70,7 +70,7 @@ Create a file named `.env` in the project root (same folder as `docker-compose.y
 
 - `OPENROUTER_API_KEY=YOUR_KEY_HERE`
   
-## OpenRouter API Key
+**OpenRouter API Key**
 
 This project requires an OpenRouter API key to call LLM models.
 
@@ -78,8 +78,6 @@ This project requires an OpenRouter API key to call LLM models.
 2. Go to Dashboard → API Keys
 3. Create a new key
 4. Set it in your local `.env` (do not commit secrets):
-
-OPENROUTER_API_KEY=YOUR_KEY_HERE
 
 Other environment variables are defined in `docker-compose.yml` (service name, OTLP endpoint, ports, etc.).
 

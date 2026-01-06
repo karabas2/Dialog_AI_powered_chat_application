@@ -3,7 +3,6 @@ export const ALLOWED_MODELS = [
     "xiaomi/mimo-v2-flash:free",
     "mistralai/mistral-7b-instruct:free",
     "nex-agi/deepseek-v3.1-nex-n1:free",
-  "1nvidia/nemotron-3-nano-30b-a3b:free",
   "meta-llama/llama-3.2-11b-vision-instruct",
   "openai/gpt-4o-mini",
 ];

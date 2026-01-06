@@ -5,7 +5,6 @@ import { trace } from "@opentelemetry/api";
 const MODEL_META = {
   "xiaomi/mimo-v2-flash:free":"Mimo V2 Flash (Hızlı)",
   "nex-agi/deepseek-v3.1-nex-n1:free": "DeepSeek-v3.1 (Önerilen)",
-  "nvidia/nemotron-3-nano-30b-a3b:free": "nvidia/nemotron-3",
   "mistralai/mistral-7b-instruct:free": "Mistral 7B (Hızlı)",
   "openai/gpt-4o-mini": "GPT-4o Mini (Hızlı, Görsel)",
   "meta-llama/llama-3.2-11b-vision-instruct": "Llama 3.2 11B Vision (Beta)",

@@ -1,182 +1,129 @@
 # Dialog AI Chat Application
 
-This project is a full-stack AI-powered chat application that supports multi-session conversations, multiple LLM models, optional vision (image) input, and end-to-end observability using OpenTelemetry.
+Dialog is a full-stack, locally runnable AI chat application. It supports multi-session conversations, multiple LLM models (via OpenRouter), optional vision (image) input, and end-to-end observability with OpenTelemetry + Jaeger.
 
-The application is designed to run entirely on a local development environment and demonstrates clean architecture, robust error handling, and production-style telemetry practices.
-
-**Architecture Overview**
-
-Frontend (React + Vite)
-↓
-Backend (Node.js + Express)
-↓
-SQLite (Persistence)
-↓
-OpenRouter (LLM Provider)
-↓
-OpenTelemetry (Tracing)
-↓
-Jaeger (Trace Visualization)
-
-### 💬 Chat & UI
-* **Multi-session Conversations:** Manage and persist multiple chat threads.
-* **Optimistic UI:** High-performance rendering for a smooth user experience.
-* **Vision Support:** Image upload capability with real-time preview and analysis.
-* **Auto-session Management:** Automatic session creation triggered by the first user message.
-
-### 🧠 Model Intelligence
-* **Diverse LLM Support:** Integrated with OpenRouter to provide access to various models.
-* **Context-Aware Formatting:** Automatic request formatting based on whether the model supports vision or text-only inputs.
-* **Failure Resilience:** Implements timeout-safe external API calls and automatic database rollbacks on LLM errors.
-
-### 📊 Observability & DevOps
-* **OpenTelemetry Instrumentation:** Automatic and custom spans for monitoring system health.
-* **Distributed Tracing:** Visualize the lifecycle of a request from the UI to the LLM API using **Jaeger**.
-* **Performance Tracking:** Detailed metrics for database operations and external API latency.
+The goal of this project is to demonstrate a clean full-stack architecture, resilient LLM integration, and production-style tracing—while keeping the developer experience simple (single-command local startup with Docker Compose).
 
 ---
-Local Setup
-1. Clone the Repository
-git clone <repository-url>
-cd <repository-name>
 
-2. Environment Variables
+## Architecture Overview
 
-Create a .env file in the backend/ directory:
+Frontend (React + Vite) → Backend (Node.js + Express) → SQLite → OpenRouter (LLM)  
+Observability: OpenTelemetry (Tracing) → OTLP (HTTP) → Jaeger (Trace UI)
 
-OPENROUTER_API_KEY=your_api_key_here
-OTEL_SERVICE_NAME=dialog-backend
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
-NODE_ENV=development
+---
 
+## Key Features
 
-An example file is provided as .env.example.
+### Chat & UI
+- Multi-session chat UI (create, list, open, delete sessions)
+- Session persistence (SQLite)
+- Optimistic UI rendering for smooth UX
+- Image upload with preview (enabled only for vision-capable models)
+- Automatic session creation on first message
 
-3. Install Dependencies
-Backend
-cd backend
-npm install
+### Model Support
+- Multiple models provided through OpenRouter
+- Automatic request formatting based on model capability:
+  - Text-only models receive string content
+  - Vision models receive structured content with image_url items
+- Robust error handling:
+  - Timeout-safe LLM calls
+  - Proper error responses to the UI
+  - Automatic rollback behavior on LLM failures (no broken sessions/messages)
 
-Frontend
-cd frontend
-npm install
+### Observability (OpenTelemetry + Jaeger)
+- OpenTelemetry auto-instrumentation for:
+  - HTTP server (Express)
+  - HTTP client/fetch
+  - Runtime signals (where applicable)
+- Custom spans for critical operations:
+  - Chat completion lifecycle
+  - Database reads/writes
+  - External LLM API calls (latency + status)
+  - UI-triggered telemetry events via a backend telemetry endpoint
+- OTLP HTTP exporter compatible with Jaeger All-in-One
 
-Running Jaeger (Tracing Backend)
+Telemetry is designed to be non-blocking: tracing failures do not break the application.
 
-Run Jaeger locally using Docker:
+---
 
-docker run -d \
-  -p 16686:16686 \
-  -p 4318:4318 \
-  jaegertracing/all-in-one:1.55
+## Technical Choices and Rationale
 
+- **React + Vite (Frontend):** fast local development, clean TypeScript ergonomics, easy build pipeline.
+- **Node.js + Express (Backend):** minimal, flexible REST API layer with straightforward middleware and routing.
+- **SQLite (Persistence):** lightweight local database with zero external dependencies; ideal for case-study scope.
+- **OpenRouter (LLM Provider):** simple access to multiple models through one API surface.
+- **OpenTelemetry + Jaeger:** industry-standard distributed tracing; Jaeger provides a simple local trace UI.
+- **Docker Compose:** one-command local environment with consistent networking between services.
 
-Jaeger UI: http://localhost:16686
+---
 
-OTLP HTTP Endpoint: http://localhost:4318/v1/traces
+## Local Setup (Docker Compose)
 
-Running the Application
-Backend
-cd backend
-npm run dev
+### Prerequisites
+- Docker Desktop (or Docker Engine) with Docker Compose support.
 
+### Environment Variables
+Create a file named `.env` in the project root (same folder as `docker-compose.yml`) and set:
 
-Backend will be available at:
+- `OPENROUTER_API_KEY=YOUR_KEY_HERE`
 
-http://localhost:8081
+Other environment variables are already defined in `docker-compose.yml` (service name, OTLP endpoint, ports, etc.).
 
-Frontend
-cd frontend
-npm run dev
+### Start the Full Stack
+From the project root:
 
+- `docker compose up --build`
 
-Frontend will be available at:
+This starts:
+- **jaeger** (trace backend + UI)
+- **backend** (API + OpenTelemetry exporter)
+- **frontend** (served via Nginx)
 
-http://localhost:5173
+### Access URLs
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8081` (or the mapped port in `docker-compose.yml`)
+- Jaeger UI: `http://localhost:16686`
 
-Viewing Traces in Jaeger
+### Stop / Clean
+- Stop: `docker compose down`
+- Stop + remove volumes: `docker compose down -v`
 
-Open http://localhost:16686
+---
 
-Select the service name:
+## Viewing Traces in Jaeger
 
-dialog-backend
+1. Open Jaeger UI: `http://localhost:16686`
+2. In the **Service** dropdown, select the backend service name (e.g., `dialog-backend`)
+3. Click **Find Traces**
+4. Inspect traces and spans such as:
+   - API requests (e.g., `/api/sessions`, `/api/telemetry`)
+   - Database read/write operations
+   - OpenRouter LLM call span (status code + latency)
+   - UI event spans (telemetry)
 
+---
 
-Click Find Traces
+## Project Structure
 
-Inspect traces for:
-
-HTTP requests
-
-Database queries
-
-LLM calls
-
-User interaction events
-
-Telemetry & Tracing Details
-Automatically Instrumented
-
-HTTP server (Express)
-
-Fetch / HTTP client
-
-Database operations
-
-Runtime metrics
-
-Custom Spans
-
-Chat completion lifecycle
-
-Database read/write operations
-
-External LLM API calls
-
-UI-triggered telemetry events
-
-Telemetry is designed to be non-blocking and will never affect application behavior if tracing is unavailable.
-
-Project Structure
-root
-├── backend
-│   ├── src
+```text
+root/
+├── backend/
+│   ├── src/
 │   │   ├── otel.js
 │   │   ├── server.js
-│   │   ├── routes
-│   │   ├── services
-│   │   └── db
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   └── db/
 │   └── .env.example
-├── frontend
-│   ├── src
+├── frontend/
+│   ├── src/
 │   │   ├── App.tsx
-│   │   ├── lib
-│   │   └── components
+│   │   ├── lib/
+│   │   └── components/
+│   └── nginx.conf
 ├── docker-compose.yml
 ├── README.md
 └── .gitignore
-
-Notes
-
-.env files are intentionally excluded from version control.
-
-The application is intended to run locally.
-
-Docker is only required for Jaeger.
-
-API keys should never be committed to the repository.
-
-Summary
-
-This project demonstrates:
-
-Clean full-stack architecture
-
-Practical LLM integration
-
-Vision-capable chat workflows
-
-Production-grade observability with OpenTelemetry
-
-Clear local developer experience

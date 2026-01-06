@@ -1,9 +1,9 @@
 import { ALLOWED_MODELS, supportsVision, getDefaultModelId } from "../constants/models.js";
 import { trace } from "@opentelemetry/api";
 
-// id -> human label mapping for the model dropdown
+// mapping for the model dropdown
 const MODEL_META = {
-  "meta-llama/llama-3.1-8b-instruct:free": "Llama 3.1 8B (Önerilen)",
+  "xiaomi/mimo-v2-flash:free":"Mimo V2 Flash (Hızlı)",
   "qwen/qwen-2.5-7b-instruct:free": "Qwen 2.5 7B (Analiz)",
   "microsoft/phi-3-mini-128k-instruct:free": "Phi-3 Mini (Çok hızlı)",
   "mistralai/mistral-7b-instruct:free": "Mistral 7B (Hızlı)",

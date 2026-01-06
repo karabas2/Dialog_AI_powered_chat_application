@@ -1,89 +1,40 @@
-**Dialog AI Chat Application**
+# Dialog AI Chat Application
 
 This project is a full-stack AI-powered chat application that supports multi-session conversations, multiple LLM models, optional vision (image) input, and end-to-end observability using OpenTelemetry.
 
 The application is designed to run entirely on a local development environment and demonstrates clean architecture, robust error handling, and production-style telemetry practices.
 
-Overview
-
-Architecture
+**Architecture Overview**
 
 Frontend (React + Vite)
-→ Backend (Node.js + Express)
-→ SQLite (Persistence)
-→ OpenRouter (LLM Provider)
-→ OpenTelemetry (Tracing)
-→ Jaeger (Trace Visualization)
+↓
+Backend (Node.js + Express)
+↓
+SQLite (Persistence)
+↓
+OpenRouter (LLM Provider)
+↓
+OpenTelemetry (Tracing)
+↓
+Jaeger (Trace Visualization)
 
-Features
-Chat & UI
+### 💬 Chat & UI
+* **Multi-session Conversations:** Manage and persist multiple chat threads.
+* **Optimistic UI:** High-performance rendering for a smooth user experience.
+* **Vision Support:** Image upload capability with real-time preview and analysis.
+* **Auto-session Management:** Automatic session creation triggered by the first user message.
 
-Multi-session chat interface
+### 🧠 Model Intelligence
+* **Diverse LLM Support:** Integrated with OpenRouter to provide access to various models.
+* **Context-Aware Formatting:** Automatic request formatting based on whether the model supports vision or text-only inputs.
+* **Failure Resilience:** Implements timeout-safe external API calls and automatic database rollbacks on LLM errors.
 
-Session persistence
+### 📊 Observability & DevOps
+* **OpenTelemetry Instrumentation:** Automatic and custom spans for monitoring system health.
+* **Distributed Tracing:** Visualize the lifecycle of a request from the UI to the LLM API using **Jaeger**.
+* **Performance Tracking:** Detailed metrics for database operations and external API latency.
 
-Optimistic UI rendering
-
-Image upload with preview
-
-Automatic session creation on first message
-
-Model Support
-
-Multiple LLM models
-
-Vision and non-vision model handling
-
-Automatic request formatting based on model capabilities
-
-Backend
-
-RESTful API
-
-SQLite-based persistence
-
-Automatic rollback on LLM failures
-
-Timeout-safe external API calls
-
-Observability
-
-OpenTelemetry auto-instrumentation
-
-Custom spans for critical operations
-
-Distributed tracing via OTLP
-
-Jaeger-compatible trace visualization
-
-Technology Stack
-
-Frontend
-
-React
-
-TypeScript
-
-Vite
-
-Backend
-
-Node.js (ESM)
-
-Express
-
-SQLite
-
-OpenRouter API
-
-Observability
-
-OpenTelemetry SDK
-
-OTLP HTTP Exporter
-
-Jaeger (All-in-One)
-
+---
 Local Setup
 1. Clone the Repository
 git clone <repository-url>
